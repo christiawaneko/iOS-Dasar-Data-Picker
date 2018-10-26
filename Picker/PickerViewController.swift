@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  PickerViewController.swift
 //  Picker
 //
 //  Created by Christiawan Eko Saputro on 15/10/18.
@@ -8,14 +8,14 @@
 
 import UIKit
 
-class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource {
-
-    @IBOutlet weak var dataPickerView: UIPickerView!
+class PickerViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSource {
     
+    @IBOutlet weak var txtData: UITextField!
+    @IBOutlet weak var lblNegara: UILabel!
     @IBOutlet weak var txtDeskripsi: UITextView!
-    @IBOutlet weak var LblNegara: UILabel!
     
     @IBOutlet weak var imgBendera: UIImageView!
+    
     
     var bendera : [ String ] = [
         "Bendera-Brunei-Darusalam",
@@ -60,16 +60,19 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         "( Member since 1992 )\n Ministry of Education and Training - Vietnam"
     ]
     
-    let pickertxtData = UIPickerView()
     
+    let dataNegaraPick = UIPickerView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        dataPickerView.delegate = self
-        dataPickerView.dataSource = self
+        DoneToolbar()
+        
+        dataNegaraPick.delegate  = self
+        dataNegaraPick.dataSource = self
+        txtData.inputView = dataNegaraPick
         
     }
+    
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -79,19 +82,35 @@ class ViewController: UIViewController,UIPickerViewDelegate,UIPickerViewDataSour
         return negara.count
     }
     
-    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return negara[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        txtDeskripsi.text = deskripsi[row]
-        LblNegara.text = negara[row]
+        lblNegara.text      = negara[row]
+        txtDeskripsi.text   = deskripsi[row]
+        txtData.text        = negara[row]
         
-        imgBendera.image = UIImage(named: bendera[row])
-       
+        imgBendera.image    = UIImage(named: bendera[row])
         
+    }
+    
+    
+    func DoneToolbar() {
+        
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(dismissKeyboard))
+        
+        toolBar.setItems([doneButton], animated: false)
+        toolBar.isUserInteractionEnabled = true
+        txtData.inputAccessoryView = toolBar
+        
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 
 }
-
